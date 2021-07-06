@@ -1,12 +1,14 @@
+## 잡코리아에 부담을 주지 않기 위해 병렬처리를 하지 않기 위해 간단히 python 으로 작성합니다.
 import time, os
 import requests
 import pandas as pd
 from tqdm import tqdm
 from lxml import html
+
 if __name__ == '__main__':
     if not os.path.exists('data'): # create data dir
         os.makedirs('data')
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv('data/data.csv')
     """
     || 회사명 || 제목(신입, 인턴 등 뽑기 위함)|| 전문가가 본 자소서 평점|| 지원자 스펙 || 자소서 텍스트 || 자소서 total advice || 자소서 각 문단 advice ||
     """
