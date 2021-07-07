@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 from tqdm import tqdm
 from lxml import html
-
+WAIT_TIME = 0.4
 if __name__ == '__main__':
     if not os.path.exists('data'): # create data dir
         os.makedirs('data')
@@ -19,7 +19,7 @@ if __name__ == '__main__':
             source_id = row['source_id']
             url = 'https://www.jobkorea.co.kr/starter/passassay/view/{}'.format(source_id)
             res = requests.get(url)
-            if res.status_code!=200:
+            if res.status_code!=200: # ip 밴 일때 탈출
                 print(source_id, url)
                 break
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         except Exception:
             # 데이터 존재하지 않을때
             print('skip source id {}'.format(source_id))
-        time.sleep(0.4)
+        time.sleep(WAIT_TIME)
     
 
 

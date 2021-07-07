@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"sort"
 )
 
 const (
@@ -13,50 +17,86 @@ const (
 	RESUME_BASE_URL = "https://jasoseol.com/example_resume/list.json" // 자소설 사이트의 데이터를 가져옴
 )
 
-type Query struct {
-	Keyword string // 빈 문자열
-	Num     string // 15개
-	Page    string // 페이지 번호
+var headers = []string{
+	"id",
+	"source_id",
+	"category_id",
+	"apply_time",
+	"company",
+	"duty",
+	"school",
+	"major",
+	"score",
+	"foreign_score",
+	"activity",
+	"scrap",
+	"status",
+	"created_at",
+	"updated_at",
 }
-type Person struct {
-	Name string
-	Age  int
+
+type Query struct {
+	// json 특성상 뒤쪽에 변수 실제명이 필요함
+	Num  int `json:"num"`  // 15개
+	Page int `json:"page"` // 페이지 번호
 }
 
 func main() {
-	query := Query{"", "15", "1"}
-
-	queryBytes, _ := json.Marshal(query)
-	buff := bytes.NewBuffer(queryBytes)
-	fmt.Println(RESUME_BASE_URL)
-	response, err := http.Post(RESUME_BASE_URL, "application/json", buff)
-
+	file, err := os.Create("./data/data.csv") // 저장 파일 설정
 	if err != nil {
 		panic(err)
 	}
-	defer response.Body.Close()
+	wr := csv.NewWriter(bufio.NewWriter(file))
+	defer wr.Flush()
+	sort.Strings(headers) // header 설정 및 소팅
+	wr.Write(headers)
 
-	// Response 체크.
-	fmt.Println("response Status:", response.Status)
-	fmt.Println("response Headers:", response.Header)
-	body, _ := ioutil.ReadAll(response.Body)
-	if err == nil {
-		fmt.Println("response Body:", string(body))
+	for i := 1; i < MAX_PAGE; i++ {
+		fmt.Println("process page\t", i)
+		query := Query{15, i}
+
+		queryBytes, _ := json.Marshal(query)
+		buff := bytes.NewBuffer(queryBytes)
+		req, err := http.NewRequest("POST", RESUME_BASE_URL, buff)
+		if err != nil {
+			panic(err)
+		}
+		req.Header.Add("Content-Type", "application/json")
+		client := &http.Client{}
+		response, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+
+		defer response.Body.Close()
+
+		body, _ := ioutil.ReadAll(response.Body)
+
+		data := make(map[string]interface{}) // 결과값 json 파싱
+		json.Unmarshal(body, &data)
+		res := data["example_resumes"] // resume 만 있는 interface 저장
+
+		// csv writer 생성
+		for _, element := range res.([]interface{}) {
+			s := []string{}
+			keys := make([]string, 0, len(headers))
+			for k := range element.(map[string]interface{}) {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys { // key 별로 순회
+				value := element.(map[string]interface{})[k]
+				str := fmt.Sprintf("%v", value)
+				if value == nil {
+					str = ""
+				}
+				s = append(s, str)
+
+			}
+			wr.Write(s)
+		}
+
 	}
-	// person := Person{"Alex", 10}
-	// pbytes, _ := json.Marshal(person)
-	// buff := bytes.NewBuffer(pbytes)
-	// resp, err := http.Post("http://httpbin.org/post", "application/json", buff)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	wr.Flush()
 
-	// defer resp.Body.Close()
-
-	// // Response 체크.
-	// respBody, err := ioutil.ReadAll(resp.Body)
-	// if err == nil {
-	// 	str := string(respBody)
-	// 	println(str)
-	// }
 }
