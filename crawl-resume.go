@@ -42,7 +42,7 @@ type Query struct {
 }
 
 func main() {
-	file, err := os.Create("./data/data.csv") // 저장 파일 설정
+	file, err := os.Create("data.csv") // 저장 파일 설정
 	if err != nil {
 		panic(err)
 	}
