@@ -73,9 +73,9 @@ if __name__=="__main__":
     plt.rc('font', family='AppleGothic')
 
     # cralw 데이터 기업별 개수 그래프 저장
-    df['company'].value_counts().iloc[:10].plot.bar(figsize=(15,5))
+    df['company'].value_counts().iloc[:10].plot.bar(figsize=(15,9))
     plt.savefig('data/resume_num_1_10.png')
-    df['company'].value_counts().iloc[10:20].plot.bar(figsize=(15,5))
+    df['company'].value_counts().iloc[10:20].plot.bar(figsize=(15,9))
     plt.savefig('data/resume_num_11_20.png')
 
 

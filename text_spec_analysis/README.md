@@ -18,15 +18,7 @@ from tqdm.notebook import tqdm
 import MeCab
 import ast
 mecab=MeCab.Tagger()
-mecab.parse('매캡 테스트용 문장입니다')
 ```
-
-
-
-
-    '매\tMM,~명사,F,매,*,*,*,*\n캡\tXPN,*,T,캡,*,*,*,*\n테스트\tNNG,행위,F,테스트,*,*,*,*\n용\tXSN,*,T,용,*,*,*,*\n문장\tNNG,*,T,문장,*,*,*,*\n입니다\tVCP+EC,*,F,입니다,Inflect,VCP,EC,이/VCP/*+ᄇ니다/EC/*\nEOS\n'
-
-
 
 
 ```python
@@ -377,6 +369,8 @@ df[(df['task']=='사무·총무·법무')][[
 
 
 
+### 학생 전공별 자소서 분포 
+
 
 ```python
 rows=2
@@ -400,7 +394,7 @@ plt.show()
 
 
     
-![png](output_13_0.png)
+![png](output_14_0.png)
     
 
 
@@ -430,11 +424,11 @@ plt.show()
 
 
     
-![png](output_15_0.png)
+![png](output_16_0.png)
     
 
 
-### 응용프로그래머
+### 직군별 토익점수 히스토그램 
 
 
 ```python
@@ -460,9 +454,11 @@ plt.show()
 
 
     
-![png](output_17_0.png)
+![png](output_18_0.png)
     
 
+
+### 토익 스피킹 레벨별 분포
 
 
 ```python
@@ -475,8 +471,8 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['toeic_speaking'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
@@ -488,9 +484,11 @@ plt.show()
 
 
     
-![png](output_18_0.png)
+![png](output_20_0.png)
     
 
+
+### 오픽 레벨별 분포
 
 
 ```python
@@ -503,21 +501,24 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['opic'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_19_0.png)
+![png](output_22_0.png)
     
 
+
+### 자격증 개수 분포
 
 
 ```python
@@ -530,21 +531,24 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['cert_num'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_20_0.png)
+![png](output_24_0.png)
     
 
+
+### 교내활동 개수 분포
 
 
 ```python
@@ -557,21 +561,24 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_school'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_21_0.png)
+![png](output_26_0.png)
     
 
+
+### 사회활동 개수 분포
 
 
 ```python
@@ -584,26 +591,27 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_society'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_22_0.png)
+![png](output_28_0.png)
     
 
 
+### 자원 봉사 횟수 분포
+
 
 ```python
-# 'act_society', 'act_volunteer', 'act_oversea', 
-#     'act_intern', 'act_prize', 'act_club', 'lang']]
 rows=2
 cols=3
 row=0
@@ -613,26 +621,27 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_volunteer'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_23_0.png)
+![png](output_30_0.png)
     
 
 
+### 해외경험 개수 분포
+
 
 ```python
-# 'act_society', 'act_volunteer', 'act_oversea', 
-#     'act_intern', 'act_prize', 'act_club', 'lang']]
 rows=2
 cols=3
 row=0
@@ -642,26 +651,27 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_oversea'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_24_0.png)
+![png](output_32_0.png)
     
 
 
+### 인턴경험 횟수 분포
+
 
 ```python
-# 'act_society', 'act_volunteer', 'act_oversea', 
-#     'act_intern', 'act_prize', 'act_club', 'lang']]
 rows=2
 cols=3
 row=0
@@ -671,26 +681,27 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_intern'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_25_0.png)
+![png](output_34_0.png)
     
 
 
+### 수상횟수 분포
+
 
 ```python
-# 'act_society', 'act_volunteer', 'act_oversea', 
-#     'act_intern', 'act_prize', 'act_club', 'lang']]
 rows=2
 cols=3
 row=0
@@ -700,26 +711,27 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_prize'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_26_0.png)
+![png](output_36_0.png)
     
 
 
+### 동아리 횟수 분포
+
 
 ```python
-# 'act_society', 'act_volunteer', 'act_oversea', 
-#     'act_intern', 'act_prize', 'act_club', 'lang']]
 rows=2
 cols=3
 row=0
@@ -729,19 +741,20 @@ names = ["사무·총무·법무","기획·전략·경영","응용프로그래�
 for name in names:
     tmp = df[(df['task']==name)]['act_club'].value_counts() 
     ax[row][col].bar(tmp.index, height = tmp)
-    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)))
-
+    ax[row][col].set(title=name + '|개수 : ' + str(sum(tmp)) +' | 비율 : ' + str(round(
+                                                            sum(tmp)/len(df[(df['task']==name)]),2)))
     row+=1
     if row==rows:
         row=0
         col+=1
 fig.tight_layout()
 plt.show()
+
 ```
 
 
     
-![png](output_27_0.png)
+![png](output_38_0.png)
     
 
 
